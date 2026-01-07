@@ -19,9 +19,10 @@ BASE_DIR=$(dirname "${BASH_SOURCE[0]}")
 BASE_DIR=$(readlink -f ${BASE_DIR})
 TOP_DIR=$(readlink -f ${BASE_DIR}/../..)
 BUILD_SCRIPTS_DIR=${TOP_DIR}/build-scripts
-OUTPUT_DIR=${BUILD_SCRIPTS_DIR}/output/dist
+OUTPUT_DIR=${BUILD_SCRIPTS_DIR}/cli/output/dist
 
 env_file=${BUILD_SCRIPTS_DIR}/.env
+
 if ! [ -f "${env_file}" ]; then
     echo "Error: can't find config file: '${env_file}'"
     exit 1
