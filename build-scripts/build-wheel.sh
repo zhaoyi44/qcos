@@ -16,12 +16,12 @@
 
 set -e
 
-source ./setup-env.sh
-
 BASE_DIR=$(dirname "$0")
 BASE_DIR=$(readlink -f ${BASE_DIR})
 TOP_DIR=$(readlink -f ${BASE_DIR}/..)
 OUTPUT_DIR=${TOP_DIR}/build-scripts/output/dist
+
+source ${BASE_DIR}/setup-env.sh
 
 if [ -n "${PIP_MIRROR}" ]; then
   poetry source add --priority=primary pip_mirror "${PIP_MIRROR}"
