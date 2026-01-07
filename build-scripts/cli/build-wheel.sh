@@ -25,8 +25,6 @@ source ${BASE_DIR}/setup-env.sh
 
 if [ -n "${PIP_MIRROR}" ]; then
   poetry source -C ${SRC_DIR} add --priority=primary pip_mirror "${PIP_MIRROR}"
-else
-  poetry source -C ${SRC_DIR} remove pip_mirror
 fi
 
 # clean env
@@ -35,5 +33,7 @@ rm -rf ${TOP_DIR}/src/wy_qcos_client*.egg-info
 
 # build
 poetry build -C ${SRC_DIR} -o ${OUTPUT_DIR}
-poetry source -C ${SRC_DIR} remove pip_mirror
+if [ -n "${PIP_MIRROR}" ]; then
+  poetry source -C ${SRC_DIR} remove pip_mirror
+fi
 echo "Dist package dir: ${OUTPUT_DIR}"
