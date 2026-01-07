@@ -29,13 +29,12 @@ jobs:
       - name: Build release distributions
         run: |
           # NOTE: put your own distribution build steps here.
-          python -m pip install build
-          python -m build
+          ./build-scripts/build-wheel.sh
       - name: Upload distributions
         uses: actions/upload-artifact@v4
         with:
           name: release-dists
-          path: dist/
+          path: build-scripts/output/dist/
 
   pypi-publish:
     runs-on: ubuntu-latest
@@ -61,10 +60,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: release-dists
-          path: dist/
+          path: build-scripts/output/dist/
 
       - name: Publish release distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: dist/
-
+          packages-dir: build-scripts/output/dist/
