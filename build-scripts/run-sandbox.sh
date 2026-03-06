@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # ----------------------------------------------------------------------
 # Copyright© 2024-2026 China Mobile (SuZhou) Software Technology Co.,Ltd.
 #
@@ -15,12 +15,13 @@
 
 set -e
 
-cwd=$(dirname "${BASH_SOURCE[0]}")
+cwd=$(dirname "$0")
 abs_cwd=$(realpath ${cwd})
 build_scripts_dir=${abs_cwd}
 
 source ${build_scripts_dir}/setup-env.sh
 
+echo "ZY1: ${SANDBOX_IMAGE_VERSION}"
 echo "Creating QCOS sandbox dockers ..."
 cd ${build_scripts_dir}
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # ----------------------------------------------------------------------
 # Copyright© 2024-2025 China Mobile (SuZhou) Software Technology Co.,Ltd.
 #
@@ -31,7 +31,7 @@ source ${env_file}
 export QCOS_LOCAL_SRC_DIR="${top_dir}"
 export SANDBOX_CONTAINER_NAME=qcos-sandbox
 export SANDBOX_IMAGE_NAME=qcos-sandbox
-export SANDBOX_IMAGE_VERSION=dev
+export SANDBOX_IMAGE_VERSION=${SANDBOX_IMAGE_VERSION:-dev}
 
 export QCOS_IMAGE_NAME="${QCOS_IMAGE_NAME}"
 export QCOS_IMAGE_VERSION="${QCOS_IMAGE_VERSION}"

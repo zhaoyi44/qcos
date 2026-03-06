@@ -29,17 +29,30 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
       - name: Run System Tests (QCOS)
         shell: bash
         run: |
-          ls -al
-          pwd
-          BASE_DIR=$(dirname "$0")
-          TOP_DIR=$(readlink -f ${BASE_DIR})
+          sudo -s <<'EOF'
+          TOP_DIR=$(pwd)
+          ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
+
+          # config
           cd ${TOP_DIR}/build-scripts
-          source /root/.bashrc
           cp ./env.template ./.env
+          sed -i 's/^QCOS_VERSION=.*/QCOS_VERSION=nightly/' ./version
           sed -i 's/^LOCAL_CICD=.*/LOCAL_CICD=True/' ./.env
+          sed -i 's/^QCOS_REGISTRY=.*/QCOS_REGISTRY=qcos\//' ./.env
+          mkdir -p /etc/qcos/
+          cp -rf ${TOP_DIR}/etc/qcos/st-conf.d /etc/qcos/
+          cp -rf ${TOP_DIR}/etc/qcos/qcos-st.toml /etc/qcos/qcos.toml
+
+          # run docker
           ./run-docker.sh
 
           # waiting for qcos docker running
@@ -62,6 +75,13 @@ jobs:
             exit 1
           fi
 
-          # run system tests
-          cd ${TOP_DIR}/cicd
-          ./run-tests.sh -s all
+          # run system tests in qcos
+          sleep 10
+          echo "Running system tests in container: qcos"
+          cd ${TOP_DIR}
+          tar czf /tmp/cicd.tar.gz ./cicd ./src ./samples
+          docker cp /tmp/cicd.tar.gz qcos:/tmp/
+          docker exec qcos sh -c "mkdir -p /root/qcos-project/; cd /root/qcos-project/; tar xzf /tmp/cicd.tar.gz"
+          docker exec qcos sh -c "source /root/.bashrc; echo 'Driver list:'; qcos-cli list-devices; echo 'Job list:'; qcos-cli list-jobs; cd /root/qcos-project; ./cicd/run-tests.sh -s all"
+          EOF
+

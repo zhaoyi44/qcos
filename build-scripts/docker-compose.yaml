@@ -41,7 +41,7 @@ services:
     network_mode: "host"
   qcos:
     container_name: qcos
-    image: ${REGISTRY}${QCOS_IMAGE_NAME}:${QCOS_IMAGE_VERSION}
+    image: ${REGISTRY}${QCOS_REGISTRY}${QCOS_IMAGE_NAME}:${QCOS_IMAGE_VERSION}
     privileged: true
     network_mode: "host"
     restart: always
